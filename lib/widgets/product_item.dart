@@ -4,6 +4,7 @@ import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
   const ProductItem({Key? key, @required this.product}) : super(key: key);
+
   final Product? product;
 
   @override
@@ -25,17 +26,24 @@ class ProductItem extends StatelessWidget {
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
+                errorBuilder: (BuildContext context, Object exception,
+                    StackTrace? stackTrace) {
+                  return Image.asset(
+                    "assets/images/no_connection.png",
+                    height: 200,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  );
+                },
               ),
               Positioned.fill(
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
                     onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (ctx) =>
-                              ProductDetailScreen(product: product),
-                        ),
+                      Navigator.of(context).pushNamed(
+                        ProductDetailScreen.routeName,
+                        arguments: product!.id,
                       );
                     },
                     splashColor:

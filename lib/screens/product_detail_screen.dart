@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/product_provider.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({Key? key, @required this.product})
-      : super(key: key);
+  static const routeName = "/product-detail";
 
-  final Product? product;
+  const ProductDetailScreen({Key? key}) : super(key: key);
+
+  // final Product? product;
 
   @override
   Widget build(BuildContext context) {
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final product = Provider.of<ProductProvider>(
+      context,
+      listen: false,
+    ).getProductById(productId);
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(product!.title!),
+        title: Text(product.title!),
       ),
     );
   }
