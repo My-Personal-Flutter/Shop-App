@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/models/product.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({Key? key, @required this.product}) : super(key: key);
-
-  final Product? product;
+  const ProductItem({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context, listen: false);
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -22,7 +22,7 @@ class ProductItem extends StatelessWidget {
           child: Stack(
             children: [
               Image.network(
-                product!.imageUrl!,
+                product.imageUrl!,
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -43,7 +43,7 @@ class ProductItem extends StatelessWidget {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         ProductDetailScreen.routeName,
-                        arguments: product!.id,
+                        arguments: product.id,
                       );
                     },
                     splashColor:
@@ -56,14 +56,22 @@ class ProductItem extends StatelessWidget {
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black54,
-            leading: IconButton(
-              icon: const Icon(Icons.favorite),
-              onPressed: () {},
-              iconSize: 20,
-              color: Theme.of(context).colorScheme.secondary,
+            leading: Consumer<Product>(
+              builder: (ctx, product, child) => IconButton(
+                icon: product.isFavourite
+                    ? const Icon(Icons.favorite)
+                    : const Icon(
+                        Icons.favorite_outline_outlined,
+                      ),
+                onPressed: () {
+                  product.toggleFaourite();
+                },
+                iconSize: 20,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
             ),
             title: Text(
-              product!.title!,
+              product.title!,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontFamily: "Lato",

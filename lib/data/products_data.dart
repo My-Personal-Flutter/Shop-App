@@ -1,4 +1,4 @@
-import 'package:shop_app/models/product.dart';
+import 'package:shop_app/providers/product_provider.dart';
 
 // ignore: non_constant_identifier_names
 List<Product> DUMMY_PRODUCTS = [
