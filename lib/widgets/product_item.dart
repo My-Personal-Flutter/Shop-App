@@ -18,20 +18,33 @@ class ProductItem extends StatelessWidget {
           Radius.circular(5),
         ),
         child: GridTile(
-          child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => ProductDetailScreen(product: product),
+          child: Stack(
+            children: [
+              Image.network(
+                product!.imageUrl!,
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Positioned.fill(
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (ctx) =>
+                              ProductDetailScreen(product: product),
+                        ),
+                      );
+                    },
+                    splashColor:
+                        Theme.of(context).primaryColor.withOpacity(0.3),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
                 ),
-              );
-            },
-            splashColor: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(5),
-            child: Image.network(
-              product!.imageUrl!,
-              fit: BoxFit.cover,
-            ),
+              )
+            ],
           ),
           footer: GridTileBar(
             backgroundColor: Colors.black54,
