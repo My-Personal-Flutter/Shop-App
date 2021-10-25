@@ -51,6 +51,9 @@ class CartScreen extends StatelessWidget {
                           itemCount: cart.items.length,
                         ),
                       ),
+                      SizedBox(
+                        height: 8,
+                      ),
                       Card(
                         elevation: 5,
                         shape: RoundedRectangleBorder(
