@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
@@ -9,6 +10,8 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
+    final cart = Provider.of<Cart>(context, listen: false);
+
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -55,37 +58,42 @@ class ProductItem extends StatelessWidget {
             ],
           ),
           footer: GridTileBar(
-            backgroundColor: Colors.black54,
-            leading: Consumer<Product>(
-              builder: (ctx, product, child) => IconButton(
-                icon: product.isFavourite
-                    ? const Icon(Icons.favorite)
-                    : const Icon(
-                        Icons.favorite_outline_outlined,
-                      ),
-                onPressed: () {
-                  product.toggleFaourite();
-                },
-                iconSize: 20,
-                color: Theme.of(context).colorScheme.secondary,
+              backgroundColor: Colors.black54,
+              leading: Consumer<Product>(
+                builder: (ctx, product, child) => IconButton(
+                  icon: product.isFavourite
+                      ? const Icon(Icons.favorite)
+                      : const Icon(
+                          Icons.favorite_outline_outlined,
+                        ),
+                  onPressed: () {
+                    product.toggleFaourite();
+                  },
+                  iconSize: 20,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
               ),
-            ),
-            title: Text(
-              product.title!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontFamily: "Lato",
-                fontSize: 14,
-                fontWeight: FontWeight.w700,
+              title: Text(
+                product.title!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontFamily: "Lato",
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-            trailing: IconButton(
-              icon: const Icon(Icons.shopping_cart),
-              onPressed: () {},
-              iconSize: 20,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-          ),
+              trailing: Consumer<Cart>(
+                builder: (ctx, cart, ch) => IconButton(
+                  icon: cart.findItemByProductId(product)
+                      ? const Icon(Icons.shopping_cart)
+                      : const Icon(Icons.shopping_cart_outlined),
+                  onPressed: () {
+                    cart.addItem(product);
+                  },
+                  iconSize: 20,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+              )),
         ),
       ),
     );

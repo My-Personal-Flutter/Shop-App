@@ -16,10 +16,18 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem>? _items;
+  Map<String, CartItem>? _items = {};
 
   Map<String, CartItem> get items {
     return {..._items!};
+  }
+
+  int get totalItems {
+    return _items!.length;
+  }
+
+  bool findItemByProductId(Product product) {
+    return _items!.containsKey(product.id);
   }
 
   void addItem(Product product) {
@@ -35,13 +43,19 @@ class Cart with ChangeNotifier {
       );
     } else {
       _items!.putIfAbsent(
-          product.id!,
-          () => CartItem(
-                id: DateTime.now().toString(),
-                price: product.price,
-                quantity: 1,
-                title: product.title,
-              ));
+        product.id!,
+        () => CartItem(
+          id: DateTime.now().toString(),
+          price: product.price,
+          quantity: 1,
+          title: product.title,
+        ),
+      );
     }
+    _items!.forEach((key, element) {
+      print(key);
+      print(element.quantity.toString());
+    });
+    notifyListeners();
   }
 }
