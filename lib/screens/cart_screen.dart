@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart_provider.dart' show CartProvider;
+import 'package:shop_app/providers/orders_provider.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
@@ -156,7 +157,15 @@ class CartScreen extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   ElevatedButton(
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      Provider.of<OrdersProvider>(context,
+                                              listen: false)
+                                          .addOrder(
+                                        cart.items.values.toList(),
+                                        cart.totalAmount,
+                                      );
+                                      cart.clearCart();
+                                    },
                                     child: Text(
                                       "Checkout",
                                       style: TextStyle(
@@ -314,7 +323,15 @@ class CartScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     ElevatedButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Provider.of<OrdersProvider>(context,
+                                                listen: false)
+                                            .addOrder(
+                                          cart.items.values.toList(),
+                                          cart.totalAmount,
+                                        );
+                                        cart.clearCart();
+                                      },
                                       child: Text(
                                         "Checkout",
                                         style: TextStyle(
