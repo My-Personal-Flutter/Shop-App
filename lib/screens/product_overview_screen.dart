@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/screens/cart_screen.dart';
 import 'package:shop_app/widgets/badge.dart';
 import 'package:shop_app/widgets/products_grid.dart';
@@ -27,7 +27,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         title: const Text("My Shop"),
         centerTitle: false,
         actions: [
-          Consumer<Cart>(
+          Consumer<CartProvider>(
             builder: (ctx, cart, ch) => Badge(
               child: IconButton(
                 icon: cart.totalItems > 0
@@ -46,10 +46,8 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 setState(() {
                   if (value == FilterOptions.Favorites) {
                     _isFavorite = true;
-                    print("fav" + _isFavorite.toString());
                   } else {
                     _isFavorite = false;
-                    print("fav" + _isFavorite.toString());
                   }
                 });
               },

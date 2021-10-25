@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
-import '../providers/cart.dart' as CI show CartItem;
+import '../providers/cart_provider.dart' as CI show CartItem;
 
 class CartItem extends StatelessWidget {
   const CartItem({
@@ -23,7 +23,7 @@ class CartItem extends StatelessWidget {
       key: ValueKey(cartItem!.id),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) {
-        Provider.of<Cart>(context, listen: false).deleteItem(itemId!);
+        Provider.of<CartProvider>(context, listen: false).deleteItem(itemId!);
       },
       background: Container(
         color: Theme.of(context).errorColor.withOpacity(0.85),
@@ -34,7 +34,7 @@ class CartItem extends StatelessWidget {
           size: 40,
         ),
         alignment: Alignment.centerRight,
-        padding: EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.only(right: 16),
       ),
       child: Card(
           elevation: 2.5,

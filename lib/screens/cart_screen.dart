@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shop_app/providers/cart.dart' show Cart;
+import 'package:shop_app/providers/cart_provider.dart' show CartProvider;
 import 'package:shop_app/widgets/cart_item.dart';
 
 class CartScreen extends StatelessWidget {
@@ -13,15 +13,15 @@ class CartScreen extends StatelessWidget {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
-    final cart = Provider.of<Cart>(context);
+    final cart = Provider.of<CartProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Cart"),
+        title: const Text("My Cart"),
         centerTitle: false,
       ),
       body: SafeArea(
-        minimum: EdgeInsets.all(16),
+        minimum: const EdgeInsets.all(16),
         child: cart.items.isEmpty
             ? Center(
                 child: Padding(
@@ -51,7 +51,7 @@ class CartScreen extends StatelessWidget {
                           itemCount: cart.items.length,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       Card(
@@ -119,14 +119,14 @@ class CartScreen extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Divider(
+                              const Divider(
                                 height: 8,
                               ),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
+                                  const Text(
                                     "Total",
                                     style: TextStyle(
                                       fontSize: 16,
@@ -149,7 +149,7 @@ class CartScreen extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               ),
                               Row(
@@ -221,7 +221,7 @@ class CartScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(16),
+                          padding: const EdgeInsets.all(16),
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width / 3.5,
                             child: Column(

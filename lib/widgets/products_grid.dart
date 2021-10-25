@@ -15,9 +15,9 @@ class ProductsGrid extends StatelessWidget {
         isFavorite! ? productsData.favoriteItems : productsData.items;
     bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    productList.forEach((element) {
-      print(element.id.toString());
-    });
+    // productList.forEach((element) {
+    //   print(element.id.toString());
+    // });
 
     return SafeArea(
       child: productList.isEmpty
