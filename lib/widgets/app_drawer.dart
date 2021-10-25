@@ -44,6 +44,9 @@ class AppDrawer extends StatelessWidget {
                 Navigator.of(context).pushReplacementNamed('/');
               },
             ),
+            const Divider(
+              height: 0.1,
+            ),
             ListTile(
               leading: const Icon(
                 Icons.payment,
@@ -61,7 +64,10 @@ class AppDrawer extends StatelessWidget {
                 Navigator.of(context)
                     .pushReplacementNamed(OrdersScreen.routeName);
               },
-            )
+            ),
+            const Divider(
+              height: 0.1,
+            ),
           ],
         ),
       ),

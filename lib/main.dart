@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.cyan,
           fontFamily: 'Lato',
+          canvasColor: Colors.grey[100],
           colorScheme: ColorScheme.fromSwatch(
             primarySwatch: Colors.cyan,
           ).copyWith(
