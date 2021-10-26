@@ -16,6 +16,301 @@ class CartScreen extends StatelessWidget {
 
     final cart = Provider.of<CartProvider>(context);
 
+    Widget showExpanded() {
+      return Expanded(
+        child: ListView.builder(
+          itemBuilder: (ctx, index) {
+            return CartItem(
+              itemId: cart.items.keys.toList()[index],
+              cartItem: cart.items.values.toList()[index],
+            );
+          },
+          itemCount: cart.items.length,
+        ),
+      );
+    }
+
+    Widget showCardPortrait() {
+      return Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Items",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 40,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Discounts",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        "- \$ 0.0",
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Total",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Chip(
+                    label: Text(
+                      "\$ ${cart.totalAmount.toStringAsFixed(2)}",
+                      style: TextStyle(
+                        color:
+                            Theme.of(context).primaryTextTheme.headline6!.color,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    backgroundColor: Theme.of(context).primaryColor,
+                  )
+                ],
+              ),
+              const SizedBox(
+                height: 8,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      Provider.of<OrdersProvider>(context, listen: false)
+                          .addOrder(
+                        cart.items.values.toList(),
+                        cart.totalAmount,
+                      );
+                      cart.clearCart();
+                    },
+                    child: Text(
+                      "Checkout",
+                      style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16),
+                    ),
+                    style: ButtonStyle(
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          EdgeInsets.symmetric(
+                              horizontal: MediaQuery.of(context).size.width / 4,
+                              vertical: 12)),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18.0),
+                          side: BorderSide(
+                            color: Theme.of(context).primaryColor,
+                            width: 0.5,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }
+
+    Widget showCardLandscape() {
+      return Card(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: MediaQuery.of(context).size.width / 3.5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Items",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Discounts",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        "- \$ 0.0",
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const Divider(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Total",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Chip(
+                      label: Text(
+                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          color: Theme.of(context)
+                              .primaryTextTheme
+                              .headline6!
+                              .color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      backgroundColor: Theme.of(context).primaryColor,
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 8,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        Provider.of<OrdersProvider>(context, listen: false)
+                            .addOrder(
+                          cart.items.values.toList(),
+                          cart.totalAmount,
+                        );
+                        cart.clearCart();
+                      },
+                      child: Text(
+                        "Checkout",
+                        style: TextStyle(
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .headline6!
+                                .color,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            EdgeInsets.symmetric(
+                                horizontal: isPortrait
+                                    ? MediaQuery.of(context).size.width / 4
+                                    : MediaQuery.of(context).size.width / 10,
+                                vertical: 12)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                            side: BorderSide(
+                              color: Theme.of(context).primaryColor,
+                              width: 0.5,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("My Cart"),
@@ -32,7 +327,7 @@ class CartScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).primaryColor,
-                      fontSize: 24,
+                      fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -41,342 +336,20 @@ class CartScreen extends StatelessWidget {
             : isPortrait
                 ? Column(
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) {
-                            return CartItem(
-                              itemId: cart.items.keys.toList()[index],
-                              cartItem: cart.items.values.toList()[index],
-                            );
-                          },
-                          itemCount: cart.items.length,
-                        ),
-                      ),
+                      showExpanded(),
                       const SizedBox(
                         height: 8,
                       ),
-                      Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Items",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Chip(
-                                      label: Text(
-                                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: 40,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Discounts",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Chip(
-                                      label: Text(
-                                        "- \$ 0.0",
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              const Divider(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    "Total",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Chip(
-                                    label: Text(
-                                      "\$ ${cart.totalAmount.toStringAsFixed(2)}",
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .primaryTextTheme
-                                            .headline6!
-                                            .color,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    backgroundColor:
-                                        Theme.of(context).primaryColor,
-                                  )
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Provider.of<OrdersProvider>(context,
-                                              listen: false)
-                                          .addOrder(
-                                        cart.items.values.toList(),
-                                        cart.totalAmount,
-                                      );
-                                      cart.clearCart();
-                                    },
-                                    child: Text(
-                                      "Checkout",
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 16),
-                                    ),
-                                    style: ButtonStyle(
-                                      padding:
-                                          MaterialStateProperty.all<EdgeInsets>(
-                                              EdgeInsets.symmetric(
-                                                  horizontal:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .width /
-                                                          4,
-                                                  vertical: 12)),
-                                      shape: MaterialStateProperty.all<
-                                          RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(18.0),
-                                          side: BorderSide(
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                            width: 0.5,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
+                      showCardPortrait(),
                     ],
                   )
                 : Row(
                     children: [
-                      Expanded(
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) {
-                            return CartItem(
-                              itemId: cart.items.keys.toList()[index],
-                              cartItem: cart.items.values.toList()[index],
-                            );
-                          },
-                          itemCount: cart.items.length,
-                        ),
-                      ),
+                      showExpanded(),
                       const SizedBox(
                         width: 8,
                       ),
-                      Card(
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width / 3.5,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Items",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Chip(
-                                      label: Text(
-                                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Discounts",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Chip(
-                                      label: Text(
-                                        "- \$ 0.0",
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                const Divider(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    const Text(
-                                      "Total",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    Chip(
-                                      label: Text(
-                                        "\$ ${cart.totalAmount.toStringAsFixed(2)}",
-                                        style: TextStyle(
-                                          color: Theme.of(context)
-                                              .primaryTextTheme
-                                              .headline6!
-                                              .color,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      backgroundColor:
-                                          Theme.of(context).primaryColor,
-                                    )
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Provider.of<OrdersProvider>(context,
-                                                listen: false)
-                                            .addOrder(
-                                          cart.items.values.toList(),
-                                          cart.totalAmount,
-                                        );
-                                        cart.clearCart();
-                                      },
-                                      child: Text(
-                                        "Checkout",
-                                        style: TextStyle(
-                                            color: Theme.of(context)
-                                                .primaryTextTheme
-                                                .headline6!
-                                                .color,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16),
-                                      ),
-                                      style: ButtonStyle(
-                                        padding: MaterialStateProperty
-                                            .all<EdgeInsets>(
-                                                EdgeInsets.symmetric(
-                                                    horizontal: isPortrait
-                                                        ? MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            4
-                                                        : MediaQuery.of(context)
-                                                                .size
-                                                                .width /
-                                                            10,
-                                                    vertical: 12)),
-                                        shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(18.0),
-                                            side: BorderSide(
-                                              color: Theme.of(context)
-                                                  .primaryColor,
-                                              width: 0.5,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      showCardLandscape(),
                     ],
                   ),
       ),

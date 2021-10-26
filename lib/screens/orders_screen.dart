@@ -22,14 +22,29 @@ class OrdersScreen extends StatelessWidget {
         centerTitle: false,
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          child: ListView.builder(
-            itemBuilder: (ctx, index) =>
-                OrderItem(order: orderData.orders[index]),
-            itemCount: orderData.orders.length,
-          ),
-        ),
+        child: orderData.orders.isEmpty
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "No orders yet - start ordering some!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              )
+            : Container(
+                padding: const EdgeInsets.all(16),
+                child: ListView.builder(
+                  itemBuilder: (ctx, index) =>
+                      OrderItem(order: orderData.orders[index]),
+                  itemCount: orderData.orders.length,
+                ),
+              ),
       ),
     );
   }

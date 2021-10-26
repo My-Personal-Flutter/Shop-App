@@ -35,70 +35,70 @@ class ProductsProvider with ChangeNotifier {
       imageUrl:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
     ),
-    Product(
-      id: 'p5',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p6',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p7',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p8',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p9',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p10',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p11',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
-    Product(
-      id: 'p12',
-      title: 'A Pan',
-      description: 'Prepare any meal you want.',
-      price: 49.99,
-      imageUrl:
-          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    ),
+    // Product(
+    //   id: 'p5',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p6',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p7',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p8',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p9',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p10',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p11',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
+    // Product(
+    //   id: 'p12',
+    //   title: 'A Pan',
+    //   description: 'Prepare any meal you want.',
+    //   price: 49.99,
+    //   imageUrl:
+    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
+    // ),
   ];
 
   List<Product> get items {

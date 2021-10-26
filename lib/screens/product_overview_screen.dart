@@ -45,7 +45,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
             ),
           ),
           PopupMenuButton(
-              color: Theme.of(context).colorScheme.onSecondary.withOpacity(0.5),
+              color: Colors.black87.withOpacity(0.8),
               onSelected: (FilterOptions value) {
                 setState(() {
                   if (value == FilterOptions.Favorites) {
@@ -76,7 +76,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w700,
                                 color: Theme.of(context).primaryColor),
-                          )
+                          ),
                         ],
                       ),
                     ),
