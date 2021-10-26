@@ -39,7 +39,6 @@ class CartItem extends StatelessWidget {
             content: const Text(
               "Do you want to remove the item from the cart?",
               style: TextStyle(
-                fontWeight: FontWeight.bold,
                 fontSize: 16,
               ),
             ),
