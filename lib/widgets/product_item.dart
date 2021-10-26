@@ -99,13 +99,11 @@ class ProductItem extends StatelessWidget {
                               fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withOpacity(0.9),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondary,
                         elevation: 6,
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 10),
                         behavior: SnackBarBehavior.floating,
                         duration: const Duration(seconds: 2),
                         action: SnackBarAction(
