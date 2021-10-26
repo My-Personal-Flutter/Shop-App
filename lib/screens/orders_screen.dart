@@ -30,8 +30,8 @@ class OrdersScreen extends StatelessWidget {
                     "No orders yet - start ordering some!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

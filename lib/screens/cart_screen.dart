@@ -323,11 +323,11 @@ class CartScreen extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    "No Items in the Cart yet - start adding some!",
+                    "No items in the cart yet - start adding some!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 18,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

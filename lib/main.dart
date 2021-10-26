@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.cyan,
           ).copyWith(
             secondary: Colors.amber,
-            onSecondary: Colors.black54,
+            onSecondary: Colors.black,
           ),
         ),
         initialRoute: '/',

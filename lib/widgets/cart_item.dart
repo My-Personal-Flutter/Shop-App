@@ -55,8 +55,8 @@ class CartItem extends StatelessWidget {
               ),
             ),
             title: Text(cartItem!.title!),
-            subtitle:
-                Text("Total: \$ ${(cartItem!.price! * cartItem!.quantity!)}"),
+            subtitle: Text(
+                "Total: \$ ${(cartItem!.price! * cartItem!.quantity!).toStringAsFixed(2)}"),
             trailing: Text("${cartItem!.quantity} x"),
           )),
     );

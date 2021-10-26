@@ -25,11 +25,11 @@ class ProductsGrid extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  "You have no favourite Items yet - start adding some!",
+                  "No Items yet - start adding some!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Theme.of(context).primaryColor,
-                    fontSize: 20,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                    fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
