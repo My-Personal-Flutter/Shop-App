@@ -132,4 +132,9 @@ class ProductsProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void deleteProduct(String productId) {
+    _items.removeWhere((element) => element.id == productId);
+    notifyListeners();
+  }
 }

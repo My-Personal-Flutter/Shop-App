@@ -56,8 +56,10 @@ class UserProductsScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .pushNamed(AddEditProductScreen.routeName, arguments: "Add");
+          Navigator.of(context).pushNamed(
+            AddEditProductScreen.routeName,
+            arguments: null,
+          );
         },
         child: const Icon(
           Icons.add,
