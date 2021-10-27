@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
@@ -29,11 +31,36 @@ class ProductDetailScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               height: 300,
-              child: Image.network(
-                product.imageUrl!,
-                filterQuality: FilterQuality.high,
-                fit: BoxFit.cover,
-              ),
+              child: product.imageUrl!.startsWith("http")
+                  ? Image.network(
+                      product.imageUrl!,
+                      filterQuality: FilterQuality.high,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          "assets/images/no_connection.png",
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Image.file(
+                      File(product.imageUrl!),
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          "assets/images/no_connection.png",
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
             ),
             const SizedBox(
               height: 24,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/screens/add_edit_product_screen.dart';
@@ -17,7 +19,9 @@ class UserProductItem extends StatelessWidget {
       child: ListTile(
         title: Text(product!.title!),
         leading: CircleAvatar(
-          backgroundImage: NetworkImage(product!.imageUrl!),
+          backgroundImage: product!.imageUrl!.startsWith("http")
+              ? NetworkImage(product!.imageUrl!)
+              : ExactAssetImage(product!.imageUrl!) as ImageProvider,
         ),
         trailing: SizedBox(
           width: 100,
@@ -30,12 +34,12 @@ class UserProductItem extends StatelessWidget {
                       AddEditProductScreen.routeName,
                       arguments: "Edit");
                 },
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
                 color: Theme.of(context).primaryColor,
               ),
               IconButton(
                 onPressed: () {},
-                icon: Icon(Icons.delete),
+                icon: const Icon(Icons.delete),
                 color: Theme.of(context).errorColor.withOpacity(0.85),
               ),
             ],

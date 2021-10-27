@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
@@ -106,10 +108,33 @@ class CartItem extends StatelessWidget {
               child: SizedBox(
                 height: 70.0,
                 width: 70.0,
-                child: Image.network(
-                  imageUrl!,
-                  fit: BoxFit.cover,
-                ),
+                child: imageUrl!.startsWith("http")
+                    ? Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            "assets/images/no_connection.png",
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      )
+                    : Image.file(
+                        File(imageUrl),
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            "assets/images/no_connection.png",
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
               ),
             ),
             title: Text(cartItem!.title!),
