@@ -97,7 +97,10 @@ class UserProductItem extends StatelessWidget {
         leading: CircleAvatar(
           backgroundImage: product!.imageUrl!.startsWith("http")
               ? NetworkImage(product!.imageUrl!)
-              : ExactAssetImage(product!.imageUrl!) as ImageProvider,
+              : Image.file(
+                  File(product!.imageUrl!),
+                  fit: BoxFit.cover,
+                ).image,
         ),
         trailing: SizedBox(
           width: 100,

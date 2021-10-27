@@ -54,9 +54,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _title = (ModalRoute.of(context)!.settings.arguments as String) == null
-        ? "Add"
-        : "Edit";
+    _title =
+        (ModalRoute.of(context)!.settings.arguments) == null ? "Add" : "Edit";
     if (_title == "Edit") {
       String id = ModalRoute.of(context)!.settings.arguments as String;
       _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
