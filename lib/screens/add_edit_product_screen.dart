@@ -16,6 +16,7 @@ class AddEditProductScreen extends StatefulWidget {
 }
 
 class _AddEditProductScreenState extends State<AddEditProductScreen> {
+  late String _title;
   late XFile _image;
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
@@ -31,9 +32,15 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     title: null,
   );
 
+  var _initValues = {
+    "title": "",
+    "description": "",
+    "price": "",
+    "imageUrl": "",
+  };
+
   @override
   void initState() {
-    _image = XFile("");
     super.initState();
   }
 
@@ -44,12 +51,34 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     _descriptionFocusNode.dispose();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _title = (ModalRoute.of(context)!.settings.arguments as String) == null
+        ? "Add"
+        : "Edit";
+    if (_title == "Edit") {
+      String id = ModalRoute.of(context)!.settings.arguments as String;
+      _editedProduct = Provider.of<ProductsProvider>(context, listen: false)
+          .getProductById(id);
+      _initValues = {
+        "title": _editedProduct.title!,
+        "description": _editedProduct.description!,
+        "price": _editedProduct.price.toString(),
+        "imageUrl": _editedProduct.imageUrl!,
+      };
+
+      _image = XFile(_editedProduct.imageUrl!);
+    } else {
+      _image = XFile("");
+    }
+  }
+
   Future<void> getImage() async {
     final ImagePicker _picker = ImagePicker();
     final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
     setState(() {
       if (image != null) _image = image;
-      print(_image.path);
     });
   }
 
@@ -60,17 +89,22 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     }
     if (_image.path != "") {
       _editedProduct = Product(
-        id: null,
+        id: _editedProduct.id,
+        isFavourite: _editedProduct.isFavourite,
         description: _editedProduct.description,
         imageUrl: _image.path,
         price: _editedProduct.price,
         title: _editedProduct.title,
       );
       _formKey.currentState!.save();
-      Provider.of<ProductsProvider>(context, listen: false)
-          .addProduct(_editedProduct);
+      if (_editedProduct.id != null) {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .updateProduct(_editedProduct);
+      } else {
+        Provider.of<ProductsProvider>(context, listen: false)
+            .addProduct(_editedProduct);
+      }
       Navigator.of(context).pop();
-
       print(_editedProduct.imageUrl);
       print(_editedProduct.id);
       print(_editedProduct.title);
@@ -78,27 +112,27 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
       print(_editedProduct.price);
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          "Picture is missing!",
-          style: TextStyle(
-              color: Theme.of(context).colorScheme.onSecondary,
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            "Picture is missing!",
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondary,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          elevation: 6,
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
         ),
-        backgroundColor: Theme.of(context).colorScheme.secondary,
-        elevation: 6,
-        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ));
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    String _title = ModalRoute.of(context)!.settings.arguments as String;
-
     return Scaffold(
       appBar: AppBar(
         title: Text("$_title Product"),
@@ -160,12 +194,22 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                             width: 120,
                             height: 100,
                             color: Colors.black12,
-                            child: _image.path == ""
-                                ? const Icon(Icons.add)
-                                : Image.file(
-                                    File(_image.path),
-                                    fit: BoxFit.cover,
-                                  ),
+                            child: _title != "Edit"
+                                ? _image.path == ""
+                                    ? const Icon(Icons.add)
+                                    : Image.file(
+                                        File(_image.path),
+                                        fit: BoxFit.cover,
+                                      )
+                                : _image.path.startsWith("http")
+                                    ? Image.network(
+                                        _image.path,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.file(
+                                        File(_image.path),
+                                        fit: BoxFit.cover,
+                                      ),
                           ),
                         ),
                       ),
@@ -183,6 +227,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       labelText: 'Title',
                       border: OutlineInputBorder(),
                     ),
+                    initialValue: _initValues["title"],
                     textInputAction: TextInputAction.next,
                     onFieldSubmitted: (_) {
                       Focus.of(context).requestFocus(_priceFocusNode);
@@ -195,7 +240,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                     },
                     onSaved: (value) {
                       _editedProduct = Product(
-                        id: null,
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
                         description: _editedProduct.description,
                         imageUrl: _editedProduct.imageUrl,
                         price: _editedProduct.price,
@@ -215,6 +261,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       labelText: 'Price',
                       border: OutlineInputBorder(),
                     ),
+                    initialValue: _initValues["price"],
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.number,
                     focusNode: _priceFocusNode,
@@ -235,7 +282,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                     },
                     onSaved: (value) {
                       _editedProduct = Product(
-                        id: null,
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
                         description: _editedProduct.description,
                         imageUrl: _editedProduct.imageUrl,
                         price: double.parse(value!),
@@ -255,6 +303,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       labelText: 'Description',
                       border: OutlineInputBorder(),
                     ),
+                    initialValue: _initValues["description"],
                     focusNode: _descriptionFocusNode,
                     maxLines: 3,
                     keyboardType: TextInputType.multiline,
@@ -269,7 +318,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                     },
                     onSaved: (value) {
                       _editedProduct = Product(
-                        id: null,
+                        id: _editedProduct.id,
+                        isFavourite: _editedProduct.isFavourite,
                         description: value,
                         imageUrl: _editedProduct.imageUrl,
                         price: _editedProduct.price,
