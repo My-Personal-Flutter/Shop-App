@@ -113,25 +113,24 @@ class ProductsProvider with ChangeNotifier {
     return [..._items];
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     final url = Uri.parse(
         "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json");
-    return http
-        .post(
-      url,
-      body: json.encode(
-        {
-          "description": product.description,
-          "imageUrl": product.imageUrl,
-          "price": product.price,
-          "title": product.title,
-          "isFavourite": product.isFavourite,
-          "online": product.imageUrl!.startsWith("http") ? true : false,
-          "userId": MyApp.userId,
-        },
-      ),
-    )
-        .then((response) {
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode(
+          {
+            "description": product.description,
+            "imageUrl": product.imageUrl,
+            "price": product.price,
+            "title": product.title,
+            "isFavourite": product.isFavourite,
+            "online": product.imageUrl!.startsWith("http") ? true : false,
+            "userId": MyApp.userId,
+          },
+        ),
+      );
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         description: product.description,
@@ -141,10 +140,10 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.insert(0, newProduct);
       notifyListeners();
-    }).catchError((error) {
+    } catch (error) {
       print(error);
       throw error;
-    });
+    }
   }
 
   List<Product> get favoriteItems {

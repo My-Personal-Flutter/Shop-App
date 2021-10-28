@@ -88,7 +88,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     });
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     final isValidated = _formKey.currentState!.validate();
     if (!isValidated) {
       return;
@@ -114,10 +114,11 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
         });
         Navigator.of(context).pop();
       } else {
-        Provider.of<ProductsProvider>(context, listen: false)
-            .addProduct(_editedProduct)
-            .catchError((error) {
-          return showDialog(
+        try {
+          await Provider.of<ProductsProvider>(context, listen: false)
+              .addProduct(_editedProduct);
+        } catch (error) {
+          await showDialog(
             context: context,
             builder: (ctx) => AlertDialog(
               title: const Text("An error occured"),
@@ -126,19 +127,18 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                 TextButton(
                   onPressed: () {
                     Navigator.of(ctx).pop();
-                    Navigator.of(ctx).pop();
                   },
                   child: const Text("Okay"),
                 ),
               ],
             ),
           );
-        }).then((value) {
+        } finally {
           setState(() {
             _isLoading = false;
           });
           Navigator.of(context).pop();
-        });
+        }
       }
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
