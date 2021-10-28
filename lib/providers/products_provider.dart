@@ -1,5 +1,13 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shop_app/providers/product_provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'dart:io' as io;
+
+import '../main.dart';
 
 class ProductsProvider with ChangeNotifier {
   final List<Product> _items = [
@@ -106,15 +114,35 @@ class ProductsProvider with ChangeNotifier {
   }
 
   void addProduct(Product product) {
-    final newProduct = Product(
-      id: DateTime.now().toString(),
-      description: product.description,
-      imageUrl: product.imageUrl,
-      price: product.price,
-      title: product.title,
-    );
-    _items.insert(0, newProduct);
-    notifyListeners();
+    final url = Uri.parse(
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json");
+    http
+        .post(
+      url,
+      body: json.encode(
+        {
+          "description": product.description,
+          "imageUrl": product.imageUrl,
+          "price": product.price,
+          "title": product.title,
+          "isFavourite": product.isFavourite,
+          "online": product.imageUrl!.startsWith("http") ? true : false,
+          "userId": MyApp.userId,
+        },
+      ),
+    )
+        .then((response) {
+      print(json.decode(response.body));
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+        title: product.title,
+      );
+      _items.insert(0, newProduct);
+      notifyListeners();
+    });
   }
 
   List<Product> get favoriteItems {

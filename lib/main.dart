@@ -15,6 +15,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  static const userId = 137;
+
   const MyApp({Key? key}) : super(key: key);
 
   @override

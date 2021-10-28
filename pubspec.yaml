@@ -38,6 +38,8 @@ dependencies:
   intl: ^0.17.0
   awesome_dialog: ^2.1.1
   image_picker: ^0.8.4+3
+  http: ^0.13.4
+  group_radio_button: ^1.1.0
 
 dev_dependencies:
   flutter_test:

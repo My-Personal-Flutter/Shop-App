@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
@@ -16,6 +17,8 @@ class AddEditProductScreen extends StatefulWidget {
 }
 
 class _AddEditProductScreenState extends State<AddEditProductScreen> {
+  List<String> _status = ["Online", "Offline"];
+  String _selectedGroupValue = "Offline";
   late String _title;
   late XFile _image;
   final _priceFocusNode = FocusNode();
@@ -68,6 +71,9 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
       };
 
       _image = XFile(_editedProduct.imageUrl!);
+      if (_editedProduct.imageUrl!.startsWith("http")) {
+        _selectedGroupValue = "Online";
+      }
     } else {
       _image = XFile("");
     }
@@ -104,11 +110,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
             .addProduct(_editedProduct);
       }
       Navigator.of(context).pop();
-      print(_editedProduct.imageUrl);
-      print(_editedProduct.id);
-      print(_editedProduct.title);
-      print(_editedProduct.description);
-      print(_editedProduct.price);
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -162,18 +163,30 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        children: const [
-                          Icon(
+                        children: [
+                          const Icon(
                             Icons.photo_camera,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 8,
                           ),
-                          Text(
+                          const Text(
                             "Picture",
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          RadioGroup<String>.builder(
+                            direction: Axis.horizontal,
+                            groupValue: _selectedGroupValue,
+                            onChanged: (value) => setState(() {
+                              _selectedGroupValue = value!;
+                              print(value);
+                            }),
+                            items: _status,
+                            itemBuilder: (item) => RadioButtonBuilder(
+                              item,
                             ),
                           ),
                         ],
@@ -182,7 +195,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                         height: 8,
                       ),
                       InkWell(
-                        onTap: getImage,
+                        onTap:
+                            _selectedGroupValue != "Online" ? getImage : () {},
                         splashColor:
                             Theme.of(context).primaryColor.withOpacity(0.3),
                         child: ClipRRect(
@@ -196,10 +210,15 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                             child: _title != "Edit"
                                 ? _image.path == ""
                                     ? const Icon(Icons.add)
-                                    : Image.file(
-                                        File(_image.path),
-                                        fit: BoxFit.cover,
-                                      )
+                                    : _image.path.startsWith("http")
+                                        ? Image.network(
+                                            _image.path,
+                                            fit: BoxFit.cover,
+                                          )
+                                        : Image.file(
+                                            File(_image.path),
+                                            fit: BoxFit.cover,
+                                          )
                                 : _image.path.startsWith("http")
                                     ? Image.network(
                                         _image.path,
@@ -217,6 +236,65 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                   const SizedBox(
                     height: 24,
                   ),
+                  _selectedGroupValue == "Online"
+                      ? Column(
+                          children: [
+                            TextFormField(
+                              decoration: const InputDecoration(
+                                labelText: 'Url',
+                                border: OutlineInputBorder(),
+                              ),
+                              textInputAction: TextInputAction.next,
+                              initialValue: _initValues['imageUrl'],
+                              onChanged: (value) {
+                                if (value.trim().isEmpty) {
+                                  return;
+                                }
+                                if (!value.trim().startsWith("http") &&
+                                    !value.trim().startsWith("https")) {
+                                  return;
+                                }
+                                if (!value.trim().endsWith(".jpg") &&
+                                    !value.trim().endsWith(".jpeg") &&
+                                    !value.trim().endsWith("png")) {
+                                  return;
+                                }
+                                setState(() {
+                                  _image = XFile(value);
+                                });
+                              },
+                              validator: (value) {
+                                if (value!.trim().isEmpty) {
+                                  return "Url is missing";
+                                }
+                                if (!value.trim().startsWith("http") &&
+                                    !value.trim().startsWith("https")) {
+                                  return "Url is not valid";
+                                }
+                                if (!value.trim().endsWith(".jpg") &&
+                                    !value.trim().endsWith(".jpeg") &&
+                                    !value.trim().endsWith("png")) {
+                                  return "Image is not supported ";
+                                }
+                                return null;
+                              },
+                              onSaved: (value) {
+                                _editedProduct = Product(
+                                  id: _editedProduct.id,
+                                  isFavourite: _editedProduct.isFavourite,
+                                  description: _editedProduct.description,
+                                  imageUrl: value,
+                                  price: _editedProduct.price,
+                                  title: _editedProduct.title,
+                                );
+                              },
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                          ],
+                        )
+                      : Container(),
                   TextFormField(
                     decoration: const InputDecoration(
                       // icon: Icon(
