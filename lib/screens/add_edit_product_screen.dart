@@ -107,12 +107,8 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
         _isLoading = true;
       });
       if (_editedProduct.id != null) {
-        Provider.of<ProductsProvider>(context, listen: false)
-            .updateProduct(_editedProduct);
-        setState(() {
-          _isLoading = false;
-        });
-        Navigator.of(context).pop();
+        await Provider.of<ProductsProvider>(context, listen: false)
+            .updateProduct(_editedProduct, _selectedGroupValue);
       } else {
         try {
           await Provider.of<ProductsProvider>(context, listen: false)
@@ -133,13 +129,12 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
               ],
             ),
           );
-        } finally {
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).pop();
         }
       }
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     } else {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -169,7 +164,36 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
         centerTitle: false,
         actions: [
           IconButton(
-            onPressed: _saveForm,
+            onPressed: () {
+              if (_selectedGroupValue == "Offline") {
+                if (_image.path.startsWith("http")) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        "Please change image",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      backgroundColor: Theme.of(context).colorScheme.secondary,
+                      elevation: 6,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 10),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                } else if (_title == "Add") {
+                  _saveForm();
+                } else if (_title == "Edit") {
+                  _saveForm();
+                }
+              } else {
+                _saveForm();
+              }
+            },
             icon: const Icon(Icons.save),
           ),
         ],
