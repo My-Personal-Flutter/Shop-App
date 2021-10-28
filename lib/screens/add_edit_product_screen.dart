@@ -277,7 +277,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                                 children: [
                                   TextFormField(
                                     decoration: const InputDecoration(
-                                      labelText: 'Url',
+                                      labelText: 'Image Url',
                                       border: OutlineInputBorder(),
                                     ),
                                     textInputAction: TextInputAction.next,
