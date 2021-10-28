@@ -43,24 +43,40 @@ class UserProductsScreen extends StatelessWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () => _refreshProducts(context),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            child: ListView.builder(
-              itemCount: productsData.items.length,
-              itemBuilder: (ctx, index) => Column(
-                children: [
-                  UserProductItem(
-                    product: productsData.items[index],
+        child: productsData.items.isEmpty
+            ? Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "No Items yet - start adding some!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  const SizedBox(
-                    height: 2,
-                  )
-                ],
+                ),
+              )
+            : SafeArea(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                  child: ListView.builder(
+                    itemCount: productsData.items.length,
+                    itemBuilder: (ctx, index) => Column(
+                      children: [
+                        UserProductItem(
+                          product: productsData.items[index],
+                        ),
+                        const SizedBox(
+                          height: 2,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -12,6 +12,7 @@ class UserProductItem extends StatelessWidget {
   final Product? product;
 
   void checkToDelete(BuildContext context, Product product) {
+    final _snackbar = ScaffoldMessenger.of(context);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -51,25 +52,49 @@ class UserProductItem extends StatelessWidget {
               primary: Colors.green[400],
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 8),
             ),
-            onPressed: () {
-              Provider.of<ProductsProvider>(context, listen: false)
-                  .deleteProduct(product.id!);
-              Navigator.of(context).pop(true);
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(
-                    "Product deleted successfully!",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  backgroundColor: Theme.of(context).colorScheme.secondary,
-                  elevation: 6,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-                  behavior: SnackBarBehavior.floating,
-                  duration: const Duration(seconds: 2)));
+            onPressed: () async {
+              try {
+                Navigator.of(ctx).pop(true);
+                await Provider.of<ProductsProvider>(context, listen: false)
+                    .deleteProduct(product.id!);
+                _snackbar.hideCurrentSnackBar();
+                _snackbar.showSnackBar(const SnackBar(
+                    content: Text(
+                      "Product deleted successfully!",
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: Colors.lightGreen,
+                    elevation: 6,
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                    behavior: SnackBarBehavior.floating,
+                    duration: Duration(seconds: 2)));
+              } catch (error) {
+                //Navigator.of(ctx).pop(true);
+                ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
+                ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                    content: const Text(
+                      "Deleting Failed!",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    backgroundColor: Theme.of(ctx).colorScheme.error,
+                    elevation: 6,
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 10),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2)));
+              }
+              // await Provider.of<ProductsProvider>(context, listen: false)
+              //     .deleteProduct(product.id!)
+              //     .then((value) {
+              //   Navigator.of(ctx).pop(true);
+              // }).catchError((error) {});
+              // Navigator.of(ctx).pop(true);
             },
             child: const Text(
               "Yes",

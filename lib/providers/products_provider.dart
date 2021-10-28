@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -57,32 +58,34 @@ class ProductsProvider with ChangeNotifier {
       print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
-      extractedData.forEach((prodId, prodData) {
-        if (prodData['userId'] == MyApp.userId) {
-          loadedProducts.insert(
-            0,
-            Product(
-                id: prodId,
-                description: prodData['description'],
-                imageUrl: prodData['imageUrl'],
-                price: prodData['price'],
-                title: prodData['title'],
-                isFavourite: prodData['isFavourite']),
-          );
-        } else if (prodData['online'] == true) {
-          loadedProducts.insert(
-            0,
-            Product(
-                id: prodId,
-                description: prodData['description'],
-                imageUrl: prodData['imageUrl'],
-                price: prodData['price'],
-                title: prodData['title'],
-                isFavourite: prodData['isFavourite']),
-          );
-        }
-      });
-      _items = loadedProducts;
+      if (extractedData != null) {
+        extractedData.forEach((prodId, prodData) {
+          if (prodData['userId'] == MyApp.userId) {
+            loadedProducts.insert(
+              0,
+              Product(
+                  id: prodId,
+                  description: prodData['description'],
+                  imageUrl: prodData['imageUrl'],
+                  price: prodData['price'],
+                  title: prodData['title'],
+                  isFavourite: prodData['isFavourite']),
+            );
+          } else if (prodData['online'] == true) {
+            loadedProducts.insert(
+              0,
+              Product(
+                  id: prodId,
+                  description: prodData['description'],
+                  imageUrl: prodData['imageUrl'],
+                  price: prodData['price'],
+                  title: prodData['title'],
+                  isFavourite: prodData['isFavourite']),
+            );
+          }
+        });
+        _items = loadedProducts;
+      }
       notifyListeners();
     } catch (error) {
       print(error);
@@ -150,8 +153,35 @@ class ProductsProvider with ChangeNotifier {
     }
   }
 
-  void deleteProduct(String productId) {
-    _items.removeWhere((element) => element.id == productId);
+  Future<void> deleteProduct(String productId) async {
+    var url = Uri.parse(
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$productId.json");
+
+    final existingProductIndex =
+        _items.indexWhere((element) => element.id == productId);
+    Product? existingProduct = _items[existingProductIndex];
+
+    _items.removeAt(existingProductIndex);
     notifyListeners();
+
+    final response = await http.delete(url).catchError((error) {
+      _items.insert(existingProductIndex, existingProduct);
+      notifyListeners();
+      throw HttpException("could not delete");
+    });
+
+    // final res = await http.get(url).then((response) {
+    //   print(json.decode(response.body));
+    //   print(response.statusCode);
+    //   if (json.decode(response.body) != null) {
+    //     check = true;
+    //   }
+    // });
+    // if (check) {
+    //   _items.insert(existingProductIndex, existingProduct);
+    //   notifyListeners();
+    //   throw HttpException("could not delete");
+    // }
+    // return;
   }
 }
