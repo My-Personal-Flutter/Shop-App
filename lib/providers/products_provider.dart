@@ -113,10 +113,10 @@ class ProductsProvider with ChangeNotifier {
     return [..._items];
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     final url = Uri.parse(
         "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json");
-    http
+    return http
         .post(
       url,
       body: json.encode(
@@ -132,7 +132,6 @@ class ProductsProvider with ChangeNotifier {
       ),
     )
         .then((response) {
-      print(json.decode(response.body));
       final newProduct = Product(
         id: json.decode(response.body)['name'],
         description: product.description,
@@ -142,6 +141,9 @@ class ProductsProvider with ChangeNotifier {
       );
       _items.insert(0, newProduct);
       notifyListeners();
+    }).catchError((error) {
+      print(error);
+      throw error;
     });
   }
 
