@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/add_edit_product_screen.dart';
@@ -13,6 +14,7 @@ class UserProductItem extends StatelessWidget {
 
   void checkToDelete(BuildContext context, Product product) {
     final _snackbar = ScaffoldMessenger.of(context);
+    final _cartReference = Provider.of<CartProvider>(context, listen: false);
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -71,6 +73,10 @@ class UserProductItem extends StatelessWidget {
                     margin: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                     behavior: SnackBarBehavior.floating,
                     duration: Duration(seconds: 2)));
+
+                if (_cartReference.findItemByProductId(product)) {
+                  _cartReference.deleteItem(product.id!);
+                }
               } catch (error) {
                 //Navigator.of(ctx).pop(true);
                 ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
