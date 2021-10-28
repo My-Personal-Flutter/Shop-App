@@ -27,7 +27,7 @@ class Product with ChangeNotifier {
     isFavourite = !isFavourite;
     notifyListeners();
     var url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$id.jsn");
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$id.json");
     try {
       await http.patch(
         url,
