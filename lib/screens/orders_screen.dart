@@ -14,21 +14,13 @@ class OrdersScreen extends StatefulWidget {
 }
 
 class _OrdersScreenState extends State<OrdersScreen> {
-  bool _isLoading = false;
+  Future? _ordersFuture;
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _isLoading = true;
-    });
-    Provider.of<OrdersProvider>(context, listen: false)
-        .fetchAndSetOrders()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _ordersFuture =
+        Provider.of<OrdersProvider>(context, listen: false).fetchAndSetOrders();
   }
 
   Future<void> _refreshProducts(BuildContext context) async {
@@ -38,8 +30,6 @@ class _OrdersScreenState extends State<OrdersScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final orderData = Provider.of<OrdersProvider>(context);
-
     return Scaffold(
       drawer: AppDrawer(
         key: UniqueKey(),
@@ -48,38 +38,43 @@ class _OrdersScreenState extends State<OrdersScreen> {
         title: const Text("My Orders"),
         centerTitle: false,
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : SafeArea(
-                child: orderData.orders.isEmpty
-                    ? Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            "No orders yet - start ordering some!",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondary,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(
+      body: FutureBuilder(
+          future: _ordersFuture,
+          builder: (ctx, snapshotData) {
+            if (snapshotData.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              if (snapshotData.error != null) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(
+                      "An error occured while fetching data!",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return RefreshIndicator(
+                  onRefresh: () => _refreshProducts(ctx),
+                  child: Consumer<OrdersProvider>(
+                    builder: (ctx, orderData, child) => Container(
                         padding: const EdgeInsets.all(16),
                         child: ListView.builder(
                           itemBuilder: (ctx, index) =>
                               OrderItem(order: orderData.orders[index]),
                           itemCount: orderData.orders.length,
-                        ),
-                      ),
-              ),
-      ),
+                        )),
+                  ),
+                );
+              }
+            }
+          }),
     );
   }
 }

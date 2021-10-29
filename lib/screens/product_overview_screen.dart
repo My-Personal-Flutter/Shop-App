@@ -21,43 +21,43 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _isFavorite = false;
-  var _isLoading = false;
+  // var _isLoading = false;
 
   Future<void> _refreshProducts(BuildContext context) async {
     await Provider.of<ProductsProvider>(context, listen: false)
         .fetchAndSetProducts();
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // 1st way
-    setState(() {
-      _isLoading = true;
-    });
-    Provider.of<ProductsProvider>(context, listen: false)
-        .fetchAndSetProducts()
-        .then((value) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
-    //
-    //  2nd way
-    // Future.delayed(Duration.zero).then((value) {
-    //   Provider.of<ProductsProvider>(context, listen: false)
-    //       .fetchAndSetProducts();
-    // });
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   // 1st way
+  //   // setState(() {
+  //   //   _isLoading = true;
+  //   // });
+  //   // Provider.of<ProductsProvider>(context, listen: false)
+  //   //     .fetchAndSetProducts()
+  //   //     .then((value) {
+  //   //   setState(() {
+  //   //     _isLoading = false;
+  //   //   });
+  //   // });
+  //   //
+  //   //  2nd way
+  //   // Future.delayed(Duration.zero).then((value) {
+  //   //   Provider.of<ProductsProvider>(context, listen: false)
+  //   //       .fetchAndSetProducts();
+  //   // });
+  // }
 
-  @override
-  void didChangeDependencies() {
-    // it runs once
-    // before the build method runs
-    super.didChangeDependencies();
-    // 3rd way
-    // Provider.of<ProductsProvider>(context).fetchAndSetProducts();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   // it runs once
+  //   // before the build method runs
+  //   super.didChangeDependencies();
+  //   // 3rd way
+  //   // Provider.of<ProductsProvider>(context).fetchAndSetProducts();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,15 +146,40 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
           )
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: _isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : ProductsGrid(
-                isFavorite: _isFavorite,
-              ),
+      body: FutureBuilder(
+        future: Provider.of<ProductsProvider>(context, listen: false)
+            .fetchAndSetProducts(),
+        builder: (ctx, snapshotData) {
+          if (snapshotData.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            if (snapshotData.error != null) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    "An error occured while fetching data!",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSecondary,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              );
+            } else {
+              return RefreshIndicator(
+                onRefresh: () => _refreshProducts(ctx),
+                child: ProductsGrid(
+                  isFavorite: _isFavorite,
+                ),
+              );
+            }
+          }
+        },
       ),
     );
   }
