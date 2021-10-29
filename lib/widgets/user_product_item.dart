@@ -64,7 +64,7 @@ class UserProductItem extends StatelessWidget {
                     content: Text(
                       "Product deleted successfully!",
                       style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),

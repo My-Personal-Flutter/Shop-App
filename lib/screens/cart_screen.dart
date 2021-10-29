@@ -4,17 +4,38 @@ import 'package:shop_app/providers/cart_provider.dart' show CartProvider;
 import 'package:shop_app/providers/orders_provider.dart';
 import 'package:shop_app/widgets/cart_item.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   static const routeName = "/cart";
 
   const CartScreen({Key? key}) : super(key: key);
 
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  var _isloading = false;
   @override
   Widget build(BuildContext context) {
     final isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
 
     final cart = Provider.of<CartProvider>(context);
+
+    void confirmOrder() {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            "Order placed successfully!",
+            style: TextStyle(
+                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          backgroundColor: Colors.lightGreen,
+          elevation: 6,
+          margin: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(seconds: 2)));
+    }
 
     Widget showExpanded() {
       return Expanded(
@@ -127,12 +148,19 @@ class CartScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () {
-                      Provider.of<OrdersProvider>(context, listen: false)
+                    onPressed: () async {
+                      setState(() {
+                        _isloading = true;
+                      });
+                      await Provider.of<OrdersProvider>(context, listen: false)
                           .addOrder(
                         cart.items.values.toList(),
                         cart.totalAmount,
                       );
+                      setState(() {
+                        _isloading = false;
+                      });
+                      confirmOrder();
                       cart.clearCart();
                     },
                     child: Text(
@@ -265,12 +293,20 @@ class CartScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Provider.of<OrdersProvider>(context, listen: false)
+                      onPressed: () async {
+                        setState(() {
+                          _isloading = true;
+                        });
+                        await Provider.of<OrdersProvider>(context,
+                                listen: false)
                             .addOrder(
                           cart.items.values.toList(),
                           cart.totalAmount,
                         );
+                        setState(() {
+                          _isloading = false;
+                        });
+                        confirmOrder();
                         cart.clearCart();
                       },
                       child: Text(
@@ -316,43 +352,47 @@ class CartScreen extends StatelessWidget {
         title: const Text("My Cart"),
         centerTitle: false,
       ),
-      body: SafeArea(
-        minimum: const EdgeInsets.all(16),
-        child: cart.items.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "No items in the cart yet - start adding some!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-              )
-            : isPortrait
-                ? Column(
-                    children: [
-                      showExpanded(),
-                      const SizedBox(
-                        height: 8,
+      body: _isloading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : SafeArea(
+              minimum: const EdgeInsets.all(16),
+              child: cart.items.isEmpty
+                  ? Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          "No items in the cart yet - start adding some!",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSecondary,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
                       ),
-                      showCardPortrait(),
-                    ],
-                  )
-                : Row(
-                    children: [
-                      showExpanded(),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      showCardLandscape(),
-                    ],
-                  ),
-      ),
+                    )
+                  : isPortrait
+                      ? Column(
+                          children: [
+                            showExpanded(),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            showCardPortrait(),
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            showExpanded(),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            showCardLandscape(),
+                          ],
+                        ),
+            ),
     );
   }
 }
