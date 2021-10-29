@@ -160,7 +160,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Text(
-                    "An error occured while fetching data!",
+                    "No items found!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.onSecondary,

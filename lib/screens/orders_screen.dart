@@ -45,16 +45,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
               return const Center(child: CircularProgressIndicator());
             } else {
               if (snapshotData.error != null) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(
-                      "An error occured while fetching data!",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.onSecondary,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
+                return RefreshIndicator(
+                  onRefresh: () => _refreshProducts(ctx),
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        "No items found!",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSecondary,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shop_app/main.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -31,21 +32,23 @@ class OrdersProvider with ChangeNotifier {
     if (extractedData != null) {
       extractedData.forEach(
         (key, value) {
-          loadedOrderedItems.insert(
-            0,
-            OrderItem(
-              id: key,
-              amount: value['amount'],
-              dateTime: DateTime.parse(value['dateTime']),
-              products: (value['products'] as List<dynamic>)
-                  .map((item) => CartItem(
-                      id: item['id'],
-                      price: item["price"],
-                      quantity: item['quantity'],
-                      title: item["title"]))
-                  .toList(),
-            ),
-          );
+          if (value['userId'] == MyApp.userId) {
+            loadedOrderedItems.insert(
+              0,
+              OrderItem(
+                id: key,
+                amount: value['amount'],
+                dateTime: DateTime.parse(value['dateTime']),
+                products: (value['products'] as List<dynamic>)
+                    .map((item) => CartItem(
+                        id: item['id'],
+                        price: item["price"],
+                        quantity: item['quantity'],
+                        title: item["title"]))
+                    .toList(),
+              ),
+            );
+          }
         },
       );
       _orders = loadedOrderedItems;
@@ -64,6 +67,7 @@ class OrdersProvider with ChangeNotifier {
     final response = await http.post(
       url,
       body: json.encode({
+        "userId": MyApp.userId,
         "amount": total,
         "dateTime": timestamp.toIso8601String(),
         'products': cartProducts
