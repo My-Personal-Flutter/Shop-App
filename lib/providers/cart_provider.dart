@@ -38,6 +38,20 @@ class CartProvider with ChangeNotifier {
     return _items!.containsKey(product.id);
   }
 
+  bool findByProductId(String product) {
+    return _items!.containsKey(product);
+  }
+
+  int getProductQuantity(String productId) {
+    var quantity = 0;
+    var res = _items!.forEach((key, value) {
+      if (key == productId) {
+        quantity = value.quantity!;
+      }
+    });
+    return quantity;
+  }
+
   void deleteItem(String id) {
     _items!.remove(id);
     notifyListeners();
