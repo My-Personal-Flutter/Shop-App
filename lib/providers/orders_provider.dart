@@ -20,6 +20,39 @@ class OrderItem {
 class OrdersProvider with ChangeNotifier {
   List<OrderItem> _orders = [];
 
+  Future<void> fetchAndSetOrders() async {
+    final url = Uri.parse(
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/orders.json");
+
+    final response = await http.get(url);
+    final List<OrderItem> loadedOrderedItems = [];
+    final extractedData = json.decode(response.body) as Map<String, dynamic>;
+
+    if (extractedData != null) {
+      extractedData.forEach(
+        (key, value) {
+          loadedOrderedItems.insert(
+            0,
+            OrderItem(
+              id: key,
+              amount: value['amount'],
+              dateTime: DateTime.parse(value['dateTime']),
+              products: (value['products'] as List<dynamic>)
+                  .map((item) => CartItem(
+                      id: item['id'],
+                      price: item["price"],
+                      quantity: item['quantity'],
+                      title: item["title"]))
+                  .toList(),
+            ),
+          );
+        },
+      );
+      _orders = loadedOrderedItems;
+      notifyListeners();
+    }
+  }
+
   List<OrderItem> get orders {
     return [..._orders];
   }
