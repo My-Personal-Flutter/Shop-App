@@ -44,7 +44,7 @@ class CartProvider with ChangeNotifier {
 
   int getProductQuantity(String productId) {
     var quantity = 0;
-    var res = _items!.forEach((key, value) {
+    _items!.forEach((key, value) {
       if (key == productId) {
         quantity = value.quantity!;
       }
