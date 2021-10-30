@@ -12,9 +12,10 @@ import '../main.dart';
 
 class ProductsProvider with ChangeNotifier {
   final String? authToken;
+  final String? userId;
   List<Product>? itemsProducts;
 
-  ProductsProvider({this.authToken, this.itemsProducts});
+  ProductsProvider({this.authToken, this.itemsProducts, this.userId});
 
   List<Product> get items {
     return [...itemsProducts!];
@@ -29,28 +30,40 @@ class ProductsProvider with ChangeNotifier {
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       if (extractedData != null) {
+        var url = Uri.parse(
+            "https://shopapp-fe5db-default-rtdb.firebaseio.com/userFavourites/$userId.json?auth=$authToken");
+
+        final favouriteResponse = await http.get(url);
+        final favouriteData = json.decode(favouriteResponse.body);
+
         extractedData.forEach((prodId, prodData) {
           if (prodData['userId'] == MyApp.userId) {
             loadedProducts.insert(
               0,
               Product(
-                  id: prodId,
-                  description: prodData['description'],
-                  imageUrl: prodData['imageUrl'],
-                  price: prodData['price'],
-                  title: prodData['title'],
-                  isFavourite: prodData['isFavourite']),
+                id: prodId,
+                description: prodData['description'],
+                imageUrl: prodData['imageUrl'],
+                price: prodData['price'],
+                title: prodData['title'],
+                isFavourite: favouriteData == null
+                    ? false
+                    : favouriteData[prodId] ?? false,
+              ),
             );
           } else if (prodData['online'] == true) {
             loadedProducts.insert(
               0,
               Product(
-                  id: prodId,
-                  description: prodData['description'],
-                  imageUrl: prodData['imageUrl'],
-                  price: prodData['price'],
-                  title: prodData['title'],
-                  isFavourite: prodData['isFavourite']),
+                id: prodId,
+                description: prodData['description'],
+                imageUrl: prodData['imageUrl'],
+                price: prodData['price'],
+                title: prodData['title'],
+                isFavourite: favouriteData == null
+                    ? false
+                    : favouriteData[prodId] ?? false,
+              ),
             );
           }
         });
@@ -75,7 +88,6 @@ class ProductsProvider with ChangeNotifier {
             "imageUrl": product.imageUrl,
             "price": product.price,
             "title": product.title,
-            "isFavourite": product.isFavourite,
             "online": product.imageUrl!.startsWith("http") ? true : false,
             "userId": MyApp.userId,
           },

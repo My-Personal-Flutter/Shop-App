@@ -22,19 +22,17 @@ class Product with ChangeNotifier {
     this.isFavourite = false,
   });
 
-  Future<void> toggleFaourite(String authToken) async {
+  Future<void> toggleFaourite(String authToken, String userId) async {
     final oldStatus = isFavourite;
     isFavourite = !isFavourite;
     notifyListeners();
     var url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/userFavourites/$userId/$id.json?auth=$authToken");
     try {
-      await http.patch(
+      await http.put(
         url,
         body: json.encode(
-          {
-            "isFavourite": isFavourite,
-          },
+          isFavourite,
         ),
       );
     } catch (error) {

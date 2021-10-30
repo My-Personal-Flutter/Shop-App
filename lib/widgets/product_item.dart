@@ -86,7 +86,7 @@ class ProductItem extends StatelessWidget {
                           Icons.favorite_outline_outlined,
                         ),
                   onPressed: () {
-                    product.toggleFaourite(authData.token!);
+                    product.toggleFaourite(authData.token!, authData.userId!);
                   },
                   iconSize: 20,
                   color: Theme.of(context).colorScheme.secondary,
