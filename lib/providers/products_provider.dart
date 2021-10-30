@@ -39,19 +39,35 @@ class ProductsProvider with ChangeNotifier {
         final favouriteData = json.decode(favouriteResponse.body);
 
         extractedData.forEach((prodId, prodData) {
-          loadedProducts.insert(
-            0,
-            Product(
-              id: prodId,
-              description: prodData['description'],
-              imageUrl: prodData['imageUrl'],
-              price: prodData['price'],
-              title: prodData['title'],
-              isFavourite: favouriteData == null
-                  ? false
-                  : favouriteData[prodId] ?? false,
-            ),
-          );
+          if (prodData["userId"] == userId) {
+            loadedProducts.insert(
+              0,
+              Product(
+                id: prodId,
+                description: prodData['description'],
+                imageUrl: prodData['imageUrl'],
+                price: prodData['price'],
+                title: prodData['title'],
+                isFavourite: favouriteData == null
+                    ? false
+                    : favouriteData[prodId] ?? false,
+              ),
+            );
+          } else if (prodData['online']) {
+            loadedProducts.insert(
+              0,
+              Product(
+                id: prodId,
+                description: prodData['description'],
+                imageUrl: prodData['imageUrl'],
+                price: prodData['price'],
+                title: prodData['title'],
+                isFavourite: favouriteData == null
+                    ? false
+                    : favouriteData[prodId] ?? false,
+              ),
+            );
+          }
         });
         itemsProducts = loadedProducts;
       }
