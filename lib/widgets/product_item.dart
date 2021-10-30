@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
 import 'package:shop_app/providers/products_provider.dart';
@@ -13,7 +14,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-
+    final authData = Provider.of<AuthProvider>(context, listen: false);
     return Card(
       elevation: 5,
       shape: RoundedRectangleBorder(
@@ -85,7 +86,7 @@ class ProductItem extends StatelessWidget {
                           Icons.favorite_outline_outlined,
                         ),
                   onPressed: () {
-                    product.toggleFaourite();
+                    product.toggleFaourite(authData.token!);
                   },
                   iconSize: 20,
                   color: Theme.of(context).colorScheme.secondary,
