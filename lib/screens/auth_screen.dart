@@ -1,11 +1,16 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shop_app/models/http_exception.dart';
+import 'package:shop_app/providers/auth_provider.dart';
 
 enum AuthMode { Signup, Login }
 
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
+
+  const AuthScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +25,10 @@ class AuthScreen extends StatelessWidget {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color.fromRGBO(0, 255, 255, 1).withOpacity(0.7),
-                  const Color.fromRGBO(0, 0, 0, 1).withOpacity(0.1),
-                  // const Color.fromRGBO(255, 193, 7, 1).withOpacity(0.8),
+                  //  Color.fromRGBO(215, 117, 255, 1).withOpacity(0.5),
+                  // Color.fromRGBO(255, 188, 117, 1).withOpacity(0.9),
+                  const Color.fromRGBO(55, 213, 214, 1).withOpacity(0.35),
+                  const Color.fromRGBO(8, 126, 225, 1).withOpacity(0.7),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -48,10 +54,7 @@ class AuthScreen extends StatelessWidget {
                       // ..translate(-10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Theme.of(context)
-                            .colorScheme
-                            .secondary
-                            .withAlpha(225),
+                        color: Colors.amber,
                         boxShadow: const [
                           BoxShadow(
                             blurRadius: 8,
@@ -105,7 +108,25 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  void _showErrodDialogue(String message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text("An Error Occurred!"),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("Okay"),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -114,10 +135,37 @@ class _AuthCardState extends State<AuthCard> {
     setState(() {
       _isLoading = true;
     });
-    if (_authMode == AuthMode.Login) {
-      // Log user in
-    } else {
-      // Sign user up
+    try {
+      if (_authMode == AuthMode.Login) {
+        // Log user in
+        await Provider.of<AuthProvider>(context, listen: false).login(
+          _authData["email"]!,
+          _authData["password"]!,
+        );
+      } else {
+        // Sign user up
+        await Provider.of<AuthProvider>(context, listen: false).signup(
+          _authData["email"]!,
+          _authData["password"]!,
+        );
+      }
+    } on HttpException catch (error) {
+      var errorMessage = "Authentication failed";
+      if (error.toString().contains("EMAIL_EXISTS")) {
+        errorMessage = "This email address is already in use";
+      } else if (error.toString().contains("INVALID_EMAIL")) {
+        errorMessage = "This is not a valid email address";
+      } else if (error.toString().contains("WEAK_PASSWORD")) {
+        errorMessage = "This password is too weak";
+      } else if (error.toString().contains("EMAIL_NOT_FOUND")) {
+        errorMessage = "Could not find a user with that email";
+      } else if (error.toString().contains("INVALID_PASSWORD")) {
+        errorMessage = "Invalid password";
+      }
+      _showErrodDialogue(errorMessage);
+    } catch (error) {
+      const errorMessage = "Could not authenticate you.Please try again later.";
+      _showErrodDialogue(errorMessage);
     }
     setState(() {
       _isLoading = false;
@@ -146,7 +194,7 @@ class _AuthCardState extends State<AuthCard> {
       ),
       elevation: 6.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 280,
+        height: _authMode == AuthMode.Signup ? 320 : 270,
         constraints:
             BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
         width: deviceSize.width * 0.75,
@@ -186,7 +234,7 @@ class _AuthCardState extends State<AuthCard> {
                   obscureText: true,
                   controller: _passwordController,
                   validator: (value) {
-                    if (value!.isEmpty || value.length < 5) {
+                    if (value!.isEmpty || value.length < 6) {
                       return 'Password is too short!';
                     }
                   },

@@ -11,48 +11,18 @@ import 'dart:io' as io;
 import '../main.dart';
 
 class ProductsProvider with ChangeNotifier {
-  List<Product> _items = [
-    // Product(
-    //   id: 'p1',
-    //   title: 'Red Shirt',
-    //   description: 'A red shirt - it is pretty red!',
-    //   price: 29.99,
-    //   imageUrl:
-    //       'https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg',
-    // ),
-    // Product(
-    //   id: 'p2',
-    //   title: 'Trousers',
-    //   description: 'A nice pair of trousers.',
-    //   price: 59.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
-    // ),
-    // Product(
-    //   id: 'p3',
-    //   title: 'Yellow Scarf',
-    //   description: 'Warm and cozy - exactly what you need for the winter.',
-    //   price: 19.99,
-    //   imageUrl:
-    //       'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
-    // ),
-    // Product(
-    //   id: 'p4',
-    //   title: 'A Pan',
-    //   description: 'Prepare any meal you want.',
-    //   price: 49.99,
-    //   imageUrl:
-    //       'https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Cast-Iron-Pan.jpg/1024px-Cast-Iron-Pan.jpg',
-    // ),
-  ];
+  final String? authToken;
+  List<Product>? itemsProducts;
+
+  ProductsProvider({this.authToken, this.itemsProducts});
 
   List<Product> get items {
-    return [..._items];
+    return [...itemsProducts!];
   }
 
   Future<void> fetchAndSetProducts() async {
     final url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json");
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.get(url);
       print(json.decode(response.body));
@@ -84,7 +54,7 @@ class ProductsProvider with ChangeNotifier {
             );
           }
         });
-        _items = loadedProducts;
+        itemsProducts = loadedProducts;
       }
       notifyListeners();
     } catch (error) {
@@ -95,7 +65,7 @@ class ProductsProvider with ChangeNotifier {
 
   Future<void> addProduct(Product product) async {
     final url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json");
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json?auth=$authToken");
     try {
       final response = await http.post(
         url,
@@ -118,7 +88,7 @@ class ProductsProvider with ChangeNotifier {
         price: product.price,
         title: product.title,
       );
-      _items.insert(0, newProduct);
+      itemsProducts!.insert(0, newProduct);
       notifyListeners();
     } catch (error) {
       print(error);
@@ -127,18 +97,19 @@ class ProductsProvider with ChangeNotifier {
   }
 
   List<Product> get favoriteItems {
-    return _items.where((element) => element.isFavourite).toList();
+    return itemsProducts!.where((element) => element.isFavourite).toList();
   }
 
   Product getProductById(String id) {
-    return _items.firstWhere((element) => element.id == id);
+    return itemsProducts!.firstWhere((element) => element.id == id);
   }
 
   Future<void> updateProduct(Product product, String seletecGroupValue) async {
-    final prodIndex = _items.indexWhere((element) => product.id == element.id);
+    final prodIndex =
+        itemsProducts!.indexWhere((element) => product.id == element.id);
     if (prodIndex >= 0) {
       final url = Uri.parse(
-          "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/${product.id}.json");
+          "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/${product.id}.json?auth=$authToken");
       await http.patch(url,
           body: json.encode({
             "description": product.description,
@@ -148,24 +119,24 @@ class ProductsProvider with ChangeNotifier {
             "online": seletecGroupValue == "Online" ? true : false,
             "userId": MyApp.userId,
           }));
-      _items[prodIndex] = product;
+      itemsProducts![prodIndex] = product;
       notifyListeners();
     }
   }
 
   Future<void> deleteProduct(String productId) async {
     var url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$productId.json");
+        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products/$productId.json?auth=$authToken");
 
     final existingProductIndex =
-        _items.indexWhere((element) => element.id == productId);
-    Product? existingProduct = _items[existingProductIndex];
+        itemsProducts!.indexWhere((element) => element.id == productId);
+    Product? existingProduct = itemsProducts![existingProductIndex];
 
-    _items.removeAt(existingProductIndex);
+    itemsProducts!.removeAt(existingProductIndex);
     notifyListeners();
 
     final response = await http.delete(url).catchError((error) {
-      _items.insert(existingProductIndex, existingProduct);
+      itemsProducts!.insert(existingProductIndex, existingProduct);
       notifyListeners();
       throw HttpException("could not delete");
     });
