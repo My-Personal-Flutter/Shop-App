@@ -108,7 +108,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _showErrodDialogue(String message) {
+  void _showErrodDialogue(String message, BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -126,7 +126,7 @@ class _AuthCardState extends State<AuthCard> {
     );
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(BuildContext context) async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -162,10 +162,10 @@ class _AuthCardState extends State<AuthCard> {
       } else if (error.toString().contains("INVALID_PASSWORD")) {
         errorMessage = "Invalid password";
       }
-      _showErrodDialogue(errorMessage);
+      _showErrodDialogue(errorMessage, context);
     } catch (error) {
       const errorMessage = "Could not authenticate you.Please try again later.";
-      _showErrodDialogue(errorMessage);
+      _showErrodDialogue(errorMessage, context);
     }
     setState(() {
       _isLoading = false;
@@ -274,7 +274,9 @@ class _AuthCardState extends State<AuthCard> {
                   ElevatedButton(
                     child:
                         Text(_authMode == AuthMode.Login ? 'LOGIN' : 'SIGN UP'),
-                    onPressed: _submit,
+                    onPressed: () {
+                      _submit(context);
+                    },
                     style: ElevatedButton.styleFrom(
                       onPrimary:
                           Theme.of(context).primaryTextTheme.button!.color,
