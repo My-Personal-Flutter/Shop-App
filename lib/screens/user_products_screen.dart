@@ -13,12 +13,12 @@ class UserProductsScreen extends StatelessWidget {
 
   Future<void> _refreshProducts(BuildContext context) async {
     await Provider.of<ProductsProvider>(context, listen: false)
-        .fetchAndSetProducts();
+        .fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final productsData = Provider.of<ProductsProvider>(context);
+    // final productsData = Provider.of<ProductsProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,42 +41,54 @@ class UserProductsScreen extends StatelessWidget {
       drawer: AppDrawer(
         key: UniqueKey(),
       ),
-      body: RefreshIndicator(
-        onRefresh: () => _refreshProducts(context),
-        child: productsData.items.isEmpty
-            ? Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Text(
-                    "No Items yet - start adding some!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (ctx, snapshot) =>
+            snapshot.connectionState == ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Consumer<ProductsProvider>(
+                    builder: (ctx, productsData, child) => RefreshIndicator(
+                      onRefresh: () => _refreshProducts(context),
+                      child: productsData.items.isEmpty
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Text(
+                                  "No Items yet - start adding some!",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSecondary,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SafeArea(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 16, horizontal: 16),
+                                child: ListView.builder(
+                                  itemCount: productsData.items.length,
+                                  itemBuilder: (ctx, index) => Column(
+                                    children: [
+                                      UserProductItem(
+                                        product: productsData.items[index],
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
                     ),
                   ),
-                ),
-              )
-            : SafeArea(
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-                  child: ListView.builder(
-                    itemCount: productsData.items.length,
-                    itemBuilder: (ctx, index) => Column(
-                      children: [
-                        UserProductItem(
-                          product: productsData.items[index],
-                        ),
-                        const SizedBox(
-                          height: 2,
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

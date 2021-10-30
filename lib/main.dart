@@ -48,6 +48,7 @@ class MyApp extends StatelessWidget {
           update: (context, authObject, previous) {
             return OrdersProvider(
                 authToken: authObject.token,
+                userId: authObject.userId,
                 itemsOrders:
                     previous!.itemsOrders == null ? [] : previous.itemsOrders);
           },

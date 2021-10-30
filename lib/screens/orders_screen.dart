@@ -51,7 +51,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        "No items found!",
+                        "Error! , No items found!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSecondary,
@@ -68,11 +68,28 @@ class _OrdersScreenState extends State<OrdersScreen> {
                   child: Consumer<OrdersProvider>(
                     builder: (ctx, orderData, child) => Container(
                         padding: const EdgeInsets.all(16),
-                        child: ListView.builder(
-                          itemBuilder: (ctx, index) =>
-                              OrderItem(order: orderData.orders[index]),
-                          itemCount: orderData.orders.length,
-                        )),
+                        child: orderData.itemsOrders!.length <= 0
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(
+                                    "No orders found, start ordering some!",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSecondary,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : ListView.builder(
+                                itemBuilder: (ctx, index) =>
+                                    OrderItem(order: orderData.orders[index]),
+                                itemCount: orderData.orders.length,
+                              )),
                   ),
                 );
               }

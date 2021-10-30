@@ -21,9 +21,11 @@ class ProductsProvider with ChangeNotifier {
     return [...itemsProducts!];
   }
 
-  Future<void> fetchAndSetProducts() async {
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    var filteringString =
+        filterByUser ? 'orderBy="userId"&equalTo="$userId"' : '';
     final url = Uri.parse(
-        "https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json?auth=$authToken");
+        'https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filteringString');
     try {
       final response = await http.get(url);
       print(json.decode(response.body));
@@ -37,35 +39,19 @@ class ProductsProvider with ChangeNotifier {
         final favouriteData = json.decode(favouriteResponse.body);
 
         extractedData.forEach((prodId, prodData) {
-          if (prodData['userId'] == MyApp.userId) {
-            loadedProducts.insert(
-              0,
-              Product(
-                id: prodId,
-                description: prodData['description'],
-                imageUrl: prodData['imageUrl'],
-                price: prodData['price'],
-                title: prodData['title'],
-                isFavourite: favouriteData == null
-                    ? false
-                    : favouriteData[prodId] ?? false,
-              ),
-            );
-          } else if (prodData['online'] == true) {
-            loadedProducts.insert(
-              0,
-              Product(
-                id: prodId,
-                description: prodData['description'],
-                imageUrl: prodData['imageUrl'],
-                price: prodData['price'],
-                title: prodData['title'],
-                isFavourite: favouriteData == null
-                    ? false
-                    : favouriteData[prodId] ?? false,
-              ),
-            );
-          }
+          loadedProducts.insert(
+            0,
+            Product(
+              id: prodId,
+              description: prodData['description'],
+              imageUrl: prodData['imageUrl'],
+              price: prodData['price'],
+              title: prodData['title'],
+              isFavourite: favouriteData == null
+                  ? false
+                  : favouriteData[prodId] ?? false,
+            ),
+          );
         });
         itemsProducts = loadedProducts;
       }
@@ -89,7 +75,7 @@ class ProductsProvider with ChangeNotifier {
             "price": product.price,
             "title": product.title,
             "online": product.imageUrl!.startsWith("http") ? true : false,
-            "userId": MyApp.userId,
+            "userId": userId,
           },
         ),
       );
