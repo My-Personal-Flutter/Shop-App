@@ -131,7 +131,7 @@ class ProductsProvider with ChangeNotifier {
             "price": product.price,
             "title": product.title,
             "online": seletecGroupValue == "Online" ? true : false,
-            "userId": MyApp.userId,
+            "userId": userId,
           }));
       itemsProducts![prodIndex] = product;
       notifyListeners();
