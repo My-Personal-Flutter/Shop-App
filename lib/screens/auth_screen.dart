@@ -54,19 +54,19 @@ class AuthScreen extends StatelessWidget {
                       // ..translate(-10.0),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
-                        color: Colors.amber,
+                        color: Colors.deepOrange.shade900,
                         boxShadow: const [
                           BoxShadow(
                             blurRadius: 8,
                             color: Colors.black26,
-                            offset: Offset(0, 4),
+                            offset: Offset(0, 8),
                           )
                         ],
                       ),
-                      child: Text(
+                      child: const Text(
                         'MyShop',
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.onSecondary,
+                          color: Colors.white,
                           fontSize: 50,
                           fontFamily: 'Anton',
                           fontWeight: FontWeight.normal,
@@ -95,7 +95,8 @@ class AuthCard extends StatefulWidget {
   _AuthCardState createState() => _AuthCardState();
 }
 
-class _AuthCardState extends State<AuthCard> {
+class _AuthCardState extends State<AuthCard>
+    with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   AuthMode _authMode = AuthMode.Login;
@@ -108,18 +109,47 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
+  AnimationController? _animationController;
+  Animation? _heightAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(
+        milliseconds: 350,
+      ),
+    );
+
+    _heightAnimation = Tween<Size>(
+      begin: const Size(double.infinity, 280),
+      end: const Size(double.infinity, 350),
+    ).animate(CurvedAnimation(
+        parent: _animationController!, curve: Curves.fastOutSlowIn));
+
+    _heightAnimation!.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _animationController!.dispose();
+    super.dispose();
+  }
+
   void _showErrodDialogue(String message, BuildContext context) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text("An Error Occurred!"),
+        title: const Text("An Error Occurred!"),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text("Okay"),
+            child: const Text("Okay"),
           ),
         ],
       ),
@@ -177,10 +207,12 @@ class _AuthCardState extends State<AuthCard> {
       setState(() {
         _authMode = AuthMode.Signup;
       });
+      _animationController!.forward();
     } else {
       setState(() {
         _authMode = AuthMode.Login;
       });
+      _animationController!.reverse();
     }
   }
 
@@ -192,11 +224,13 @@ class _AuthCardState extends State<AuthCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8.0),
       ),
-      elevation: 6.0,
+      elevation: 8.0,
       child: Container(
-        height: _authMode == AuthMode.Signup ? 320 : 270,
+        // height: _authMode == AuthMode.Signup ? 350 : 280,
+        height: _heightAnimation!.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 320 : 260),
+            // BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 280),
+            BoxConstraints(minHeight: _heightAnimation!.value.height),
         width: deviceSize.width * 0.75,
         padding: const EdgeInsets.all(16.0),
         child: Form(
