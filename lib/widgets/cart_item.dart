@@ -97,51 +97,52 @@ class CartItem extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16),
       ),
       child: Card(
-          elevation: 2.5,
-          margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(3),
-          ),
-          child: ListTile(
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(6.0), //or 15.0
-              child: SizedBox(
-                height: 70.0,
-                width: 70.0,
-                child: imageUrl!.startsWith("http")
-                    ? Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Image.asset(
-                            "assets/images/no_connection.png",
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      )
-                    : Image.file(
-                        File(imageUrl),
-                        fit: BoxFit.cover,
-                        errorBuilder: (BuildContext context, Object exception,
-                            StackTrace? stackTrace) {
-                          return Image.asset(
-                            "assets/images/no_connection.png",
-                            height: 200,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          );
-                        },
-                      ),
-              ),
+        elevation: 2.5,
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3),
+        ),
+        child: ListTile(
+          leading: ClipRRect(
+            borderRadius: BorderRadius.circular(6.0), //or 15.0
+            child: SizedBox(
+              height: 70.0,
+              width: 70.0,
+              child: imageUrl!.startsWith("http")
+                  ? Image.network(
+                      imageUrl,
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          "assets/images/file_not_found.png",
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                  : Image.file(
+                      File(imageUrl),
+                      fit: BoxFit.cover,
+                      errorBuilder: (BuildContext context, Object exception,
+                          StackTrace? stackTrace) {
+                        return Image.asset(
+                          "assets/images/file_not_found.png",
+                          height: 200,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    ),
             ),
-            title: Text(cartItem!.title!),
-            subtitle: Text(
-                "Total: \$ ${(cartItem!.price! * cartItem!.quantity!).toStringAsFixed(2)}"),
-            trailing: Text("${cartItem!.quantity} x"),
-          )),
+          ),
+          title: Text(cartItem!.title!),
+          subtitle: Text(
+              "Total: \$ ${(cartItem!.price! * cartItem!.quantity!).toStringAsFixed(2)}"),
+          trailing: Text("${cartItem!.quantity} x"),
+        ),
+      ),
     );
   }
 }

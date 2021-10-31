@@ -127,10 +127,21 @@ class UserProductItem extends StatelessWidget {
         title: Text(product!.title!),
         leading: CircleAvatar(
           backgroundImage: product!.imageUrl!.startsWith("http")
-              ? NetworkImage(product!.imageUrl!)
+              ? NetworkImage(
+                  product!.imageUrl!,
+                )
               : Image.file(
                   File(product!.imageUrl!),
                   fit: BoxFit.cover,
+                  errorBuilder: (BuildContext context, Object exception,
+                      StackTrace? stackTrace) {
+                    return Image.asset(
+                      "assets/images/file_not_found.png",
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    );
+                  },
                 ).image,
         ),
         trailing: SizedBox(

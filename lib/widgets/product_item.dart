@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/product_provider.dart';
-import 'package:shop_app/providers/products_provider.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
@@ -28,36 +27,70 @@ class ProductItem extends StatelessWidget {
           child: Stack(
             children: [
               product.imageUrl!.startsWith("http")
-                  ? Image.network(
-                      product.imageUrl!,
+                  ? SizedBox(
                       height: 200,
                       width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          "assets/images/no_connection.png",
-                          height: 200,
-                          width: double.infinity,
+                      child: Hero(
+                        tag: product.id!,
+                        child: FadeInImage.assetNetwork(
+                          image: product.imageUrl!,
+                          placeholder: "assets/images/avatar-black.gif",
                           fit: BoxFit.cover,
-                        );
-                      },
+                        ),
+                      ),
                     )
-                  : Image.file(
-                      File(product.imageUrl!),
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          "assets/images/no_connection.png",
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    ),
+                  // Image.network(
+                  //     product.imageUrl!,
+                  //     height: 200,
+                  //     width: double.infinity,
+                  //     fit: BoxFit.cover,
+                  //     errorBuilder: (BuildContext context, Object exception,
+                  //         StackTrace? stackTrace) {
+                  //       return Image.asset(
+                  //         "assets/images/file_not_found.png",
+                  //         height: 200,
+                  //         width: double.infinity,
+                  //         fit: BoxFit.cover,
+                  //       );
+                  //     },
+                  //   )
+                  : SizedBox(
+                      child: Hero(
+                        tag: product.id!,
+                        child: FadeInImage(
+                            placeholder: const AssetImage(
+                                "assets/images/avatar-black.gif"),
+                            image: Image.file(
+                              File(product.imageUrl!),
+                              errorBuilder: (BuildContext context,
+                                  Object exception, StackTrace? stackTrace) {
+                                return Image.asset(
+                                  "assets/images/file_not_found.png",
+                                  height: 200,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                );
+                              },
+                            ).image),
+                      ),
+                    )
+
+              // Image.file(
+              //     File(product.imageUrl!),
+              //     height: 200,
+              //     width: double.infinity,
+              //     fit: BoxFit.cover,
+              //     errorBuilder: (BuildContext context, Object exception,
+              //         StackTrace? stackTrace) {
+              //       return Image.asset(
+              //         "assets/images/file_not_found.png",
+              //         height: 200,
+              //         width: double.infinity,
+              //         fit: BoxFit.cover,
+              //       );
+              //     },
+              //   ),
+              ,
               Positioned.fill(
                 child: Material(
                   color: Colors.transparent,

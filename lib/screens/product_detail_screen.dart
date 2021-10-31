@@ -57,34 +57,40 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               width: double.infinity,
               height: 300,
               child: product.imageUrl!.startsWith("http")
-                  ? Image.network(
-                      product.imageUrl!,
-                      filterQuality: FilterQuality.high,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          "assets/images/no_connection.png",
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        );
-                      },
+                  ? Hero(
+                      tag: product.id!,
+                      child: Image.network(
+                        product.imageUrl!,
+                        filterQuality: FilterQuality.high,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            "assets/images/file_not_found.png",
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
                     )
-                  : Image.file(
-                      File(product.imageUrl!),
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (BuildContext context, Object exception,
-                          StackTrace? stackTrace) {
-                        return Image.asset(
-                          "assets/images/no_connection.png",
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        );
-                      },
+                  : Hero(
+                      tag: product.id!,
+                      child: Image.file(
+                        File(product.imageUrl!),
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Image.asset(
+                            "assets/images/file_not_found.png",
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          );
+                        },
+                      ),
                     ),
             ),
             const SizedBox(
