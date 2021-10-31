@@ -126,7 +126,7 @@ class ProductItem extends StatelessWidget {
                 ),
               ),
               title: Text(
-                "${product.title!}    \$ ${product.price}",
+                "${product.title!}",
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontFamily: "Lato",
