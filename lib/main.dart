@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/helpers/custom_route.dart';
 import 'package:shop_app/providers/auth_provider.dart';
 import 'package:shop_app/providers/cart_provider.dart';
 import 'package:shop_app/providers/orders_provider.dart';
@@ -61,16 +62,19 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: 'MyShop',
             theme: ThemeData(
-              primarySwatch: Colors.cyan,
-              fontFamily: 'Lato',
-              canvasColor: Colors.grey[100],
-              colorScheme: ColorScheme.fromSwatch(
                 primarySwatch: Colors.cyan,
-              ).copyWith(
-                secondary: Colors.amber,
-                onSecondary: Colors.black,
-              ),
-            ),
+                fontFamily: 'Lato',
+                canvasColor: Colors.grey[100],
+                colorScheme: ColorScheme.fromSwatch(
+                  primarySwatch: Colors.cyan,
+                ).copyWith(
+                  secondary: Colors.amber,
+                  onSecondary: Colors.black,
+                ),
+                pageTransitionsTheme: PageTransitionsTheme(builders: {
+                  TargetPlatform.android: CustomPageTransitionBuilder(),
+                  TargetPlatform.iOS: CustomPageTransitionBuilder(),
+                })),
             initialRoute: '/',
             routes: {
               '/': (ctx) => authData.isAuthenticated
