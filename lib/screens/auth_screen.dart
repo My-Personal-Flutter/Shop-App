@@ -243,10 +243,10 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
-        height: _authMode == AuthMode.Signup ? 450 : 280,
+        height: _authMode == AuthMode.Signup ? 350 : 280,
         // height: _heightAnimation!.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 450 : 280),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 280),
         // BoxConstraints(minHeight: _heightAnimation!.value.height),
         width: deviceSize.width * 0.75,
         padding: const EdgeInsets.all(16.0),
