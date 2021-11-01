@@ -66,10 +66,11 @@ class AuthProvider with ChangeNotifier {
         {
           "token": _token,
           "userId": _userId,
-          "expiryDateTime": _expiryDataTime!.toIso8601String(),
+          "expiryDateTime": _expiryDataTime!.toString(),
         },
       );
       prefs.setString("userData", userData);
+      // print(prefs.getString("userData"));
     } catch (error) {
       throw error;
     }
@@ -84,28 +85,30 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<bool> tryAutoLogin() async {
+    // print("trying auto login");
     final prefs = await SharedPreferences.getInstance();
-
+    // print(prefs.getString("userData"));
     if (!prefs.containsKey("userData")) {
       return false;
     }
+    // print("check 1");
 
-    final extractedUserData =
-        json.decode(prefs.getString("userData")!) as Map<String, Object>;
-
+    final extractedUserData = json.decode(prefs.getString("userData")!);
     final expiryDateTime =
         DateTime.parse(extractedUserData["expiryDateTime"] as String);
 
     if (expiryDateTime.isBefore(DateTime.now())) {
       return false;
     }
-
+    //  print("check 2");
     _token = extractedUserData["token"] as String;
     _userId = extractedUserData["userId"] as String;
     _expiryDataTime = expiryDateTime;
 
     notifyListeners();
     _autoLogoutTimer();
+
+    //  print("working perfect auto login");
 
     return true;
   }
