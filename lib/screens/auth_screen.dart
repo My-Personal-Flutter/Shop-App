@@ -243,10 +243,10 @@ class _AuthCardState extends State<AuthCard>
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 500),
         curve: Curves.fastOutSlowIn,
-        height: _authMode == AuthMode.Signup ? 350 : 280,
+        height: _authMode == AuthMode.Signup ? 450 : 280,
         // height: _heightAnimation!.value.height,
         constraints:
-            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 350 : 280),
+            BoxConstraints(minHeight: _authMode == AuthMode.Signup ? 450 : 280),
         // BoxConstraints(minHeight: _heightAnimation!.value.height),
         width: deviceSize.width * 0.75,
         padding: const EdgeInsets.all(16.0),
@@ -293,54 +293,31 @@ class _AuthCardState extends State<AuthCard>
                     _authData['password'] = value!;
                   },
                 ),
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                  constraints: BoxConstraints(
-                    minHeight: _authMode == AuthMode.Signup ? 10 : 0,
-                    maxHeight: _authMode == AuthMode.Signup ? 10 : 0,
+                if (_authMode == AuthMode.Signup)
+                  const SizedBox(
+                    height: 10,
                   ),
-                  child: FadeTransition(
-                    opacity: _opacityAnimation!,
-                    child: const Flexible(
-                      child: SizedBox(
-                        height: 10,
-                      ),
-                    ),
-                  ),
-                ),
-                // if (_authMode == AuthMode.Signup)
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeIn,
-                  constraints: BoxConstraints(
-                    minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                    maxHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                  ),
-                  child: FadeTransition(
-                    opacity: _opacityAnimation!,
-                    child: Flexible(
-                      child: SlideTransition(
-                        position: _slideAnimation!,
-                        child: TextFormField(
-                          enabled: _authMode == AuthMode.Signup,
-                          decoration: const InputDecoration(
-                            labelText: 'Confirm Password',
-                            border: OutlineInputBorder(),
-                          ),
-                          obscureText: true,
-                          validator: _authMode == AuthMode.Signup
-                              ? (value) {
-                                  if (value != _passwordController.text) {
-                                    return 'Passwords do not match!';
-                                  }
-                                }
-                              : null,
+                if (_authMode == AuthMode.Signup)
+                  Flexible(
+                    child: SlideTransition(
+                      position: _slideAnimation!,
+                      child: TextFormField(
+                        enabled: _authMode == AuthMode.Signup,
+                        decoration: const InputDecoration(
+                          labelText: 'Confirm Password',
+                          border: OutlineInputBorder(),
                         ),
+                        obscureText: true,
+                        validator: _authMode == AuthMode.Signup
+                            ? (value) {
+                                if (value != _passwordController.text) {
+                                  return 'Passwords do not match!';
+                                }
+                              }
+                            : null,
                       ),
                     ),
                   ),
-                ),
                 const SizedBox(
                   height: 20,
                 ),

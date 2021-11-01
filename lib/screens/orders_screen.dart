@@ -51,7 +51,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        "Error! , No items found!",
+                        "No items found!",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSecondary,

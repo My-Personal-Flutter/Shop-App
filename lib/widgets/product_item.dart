@@ -55,9 +55,12 @@ class ProductItem extends StatelessWidget {
                   //     },
                   //   )
                   : SizedBox(
+                      height: 200,
+                      width: double.infinity,
                       child: Hero(
                         tag: product.id!,
                         child: FadeInImage(
+                            fit: BoxFit.cover,
                             placeholder: const AssetImage(
                                 "assets/images/avatar-black.gif"),
                             image: Image.file(
