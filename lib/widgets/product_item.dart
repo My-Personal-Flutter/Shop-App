@@ -28,7 +28,7 @@ class ProductItem extends StatelessWidget {
             children: [
               product.imageUrl!.startsWith("http")
                   ? SizedBox(
-                      height: 200,
+                      height: double.infinity,
                       width: double.infinity,
                       child: Hero(
                         tag: product.id!,
@@ -55,7 +55,7 @@ class ProductItem extends StatelessWidget {
                   //     },
                   //   )
                   : SizedBox(
-                      height: 200,
+                      height: double.infinity,
                       width: double.infinity,
                       child: Hero(
                         tag: product.id!,
@@ -65,12 +65,11 @@ class ProductItem extends StatelessWidget {
                                 "assets/images/avatar-black.gif"),
                             image: Image.file(
                               File(product.imageUrl!),
+                              fit: BoxFit.cover,
                               errorBuilder: (BuildContext context,
                                   Object exception, StackTrace? stackTrace) {
                                 return Image.asset(
                                   "assets/images/file_not_found.png",
-                                  height: 200,
-                                  width: double.infinity,
                                   fit: BoxFit.cover,
                                 );
                               },
@@ -143,7 +142,7 @@ class ProductItem extends StatelessWidget {
                       ? const Icon(Icons.shopping_cart)
                       : const Icon(Icons.shopping_cart_outlined),
                   onPressed: () {
-                    print(product.id);
+                    //print(product.id);
                     cart.addItem(product);
                     ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(

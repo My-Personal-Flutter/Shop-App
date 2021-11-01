@@ -240,7 +240,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                                   groupValue: _selectedGroupValue,
                                   onChanged: (value) => setState(() {
                                     _selectedGroupValue = value!;
-                                    print(value);
+                                    //print(value);
                                   }),
                                   items: _status,
                                   itemBuilder: (item) => RadioButtonBuilder(

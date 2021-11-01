@@ -44,7 +44,7 @@ class AuthProvider with ChangeNotifier {
           },
         ),
       );
-      print(json.decode(response.body));
+      //print(json.decode(response.body));
       final result = json.decode(response.body);
 
       if (result['error'] != null) {

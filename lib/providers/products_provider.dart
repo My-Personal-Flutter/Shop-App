@@ -28,7 +28,7 @@ class ProductsProvider with ChangeNotifier {
         'https://shopapp-fe5db-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filteringString');
     try {
       final response = await http.get(url);
-      print(json.decode(response.body));
+      //print(json.decode(response.body));
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
       final List<Product> loadedProducts = [];
       if (extractedData != null) {
@@ -73,7 +73,7 @@ class ProductsProvider with ChangeNotifier {
       }
       notifyListeners();
     } catch (error) {
-      print(error);
+      // print(error);
       throw error;
     }
   }
@@ -105,7 +105,7 @@ class ProductsProvider with ChangeNotifier {
       itemsProducts!.insert(0, newProduct);
       notifyListeners();
     } catch (error) {
-      print(error);
+      // print(error);
       throw error;
     }
   }

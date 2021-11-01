@@ -15,6 +15,7 @@ class ProductsGrid extends StatelessWidget {
         isFavorite! ? productsData.favoriteItems : productsData.items;
     bool isPortrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
+    bool isTablet = MediaQuery.of(context).size.shortestSide > 600;
     // productList.forEach((element) {
     //   print(element.id.toString());
     // });
@@ -45,7 +46,11 @@ class ProductsGrid extends StatelessWidget {
               itemCount: productList.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 childAspectRatio: 3 / 2,
-                crossAxisCount: isPortrait ? 1 : 2,
+                crossAxisCount: isPortrait
+                    ? isTablet
+                        ? 2
+                        : 1
+                    : 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
               ),

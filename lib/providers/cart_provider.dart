@@ -80,8 +80,8 @@ class CartProvider with ChangeNotifier {
       );
     }
     _items!.forEach((key, element) {
-      print(key);
-      print(element.quantity.toString());
+      // print(key);
+      // print(element.quantity.toString());
     });
     notifyListeners();
   }
